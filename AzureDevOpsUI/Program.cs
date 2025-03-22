@@ -7,8 +7,8 @@ Raylib.SetWindowState(ConfigFlags.FLAG_WINDOW_RESIZABLE
         | ConfigFlags.FLAG_VSYNC_HINT);
 
 Raylib.InitWindow(1280, 720, "Dev Ops UI");
-string baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-Config c = JsonSerializer.Deserialize<Config>(File.ReadAllText(Path.Combine(baseDirectory, "config.json")), AppJsonSerializerContext.Default.Config);
+string? baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+Config c = JsonSerializer.Deserialize(File.ReadAllText(Path.Combine(baseDirectory ?? "", "config.json")), AppJsonSerializerContext.Default.Config);
 UIState uiState = new(c);
 DataGetter data = new(c);
 

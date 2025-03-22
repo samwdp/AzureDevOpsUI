@@ -30,7 +30,8 @@ public class UIState
     {
         Queries = config.Queries;
         SelectedQuery = Queries[0] ?? "";
-        string baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        string? baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        GUI_FONT_SIZE = config.FontSize;
         Font = Raylib.LoadFontEx(Path.Combine(baseDirectory, $"resources/{config.Font}"), GUI_FONT_SIZE, 250);
         RefreshTextWidth = Raylib.MeasureTextEx(Font, REFRESH, GUI_FONT_SIZE, FONT_SPACING);
         // get the longest string from Queries
