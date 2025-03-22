@@ -1,0 +1,104 @@
+name: Build and Publish
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+    paths-ignore:
+      - "**.md"
+      - "*/LICENSE"
+      - "*/.gitignore"
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release
+      - name: Publish Windows
+        run: dotnet publish --configuration Release -r win-x64 --self-contained true
+      - name: Create ZIP file
+        run: |
+          Compress-Archive -Path AzureDevOpsUI/bin/Release/net9.0/win-x64/publish/* -DestinationPath AzureDevOpsUI-windows-x64.zip
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AzureDevOpsUI_win-x64
+          path: AzureDevOpsUI-windows-x64.zip
+          
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release
+      - name: Publish Linux
+        run: dotnet publish --configuration Release -r linux-x64 --self-contained true
+      - name: Create tarball
+        run: |
+          cd AzureDevOpsUI/bin/Release/net9.0/linux-x64/publish/
+          tar -czvf ../../../../../../AzureDevOpsUI-linux-x64.tar.gz .
+      - name: Upload Linux Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AzureDevOpsUI_linux-x64
+          path: AzureDevOpsUI-linux-x64.tar.gz
+          
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+      - name: Restore
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release
+      - name: Publish macOS
+        run: dotnet publish --configuration Release -r osx-x64 --self-contained true
+      - name: Create tarball
+        run: |
+          cd AzureDevOpsUI/bin/Release/net9.0/osx-x64/publish/
+          tar -czvf ../../../../../../AzureDevOpsUI-mac-x64.tar.gz .
+      - name: Upload macOS Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AzureDevOpsUI_osx-x64
+          path: AzureDevOpsUI-mac-x64.tar.gz
+          
+  create-release:
+    needs: [build-windows, build-linux, build-mac]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifacts/AzureDevOpsUI_win-x64/AzureDevOpsUI-windows-x64.zip
+            artifacts/AzureDevOpsUI_linux-x64/AzureDevOpsUI-linux-x64.tar.gz
+            artifacts/AzureDevOpsUI_osx-x64/AzureDevOpsUI-mac-x64.tar.gz
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
