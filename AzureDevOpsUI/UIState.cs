@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Reflection;
 using ZeroElectric.Vinculum;
 using Font = ZeroElectric.Vinculum.Font;
 using Rectangle = ZeroElectric.Vinculum.Rectangle;
@@ -29,7 +30,8 @@ public class UIState
     {
         Queries = config.Queries;
         SelectedQuery = Queries[0] ?? "";
-        Font = Raylib.LoadFontEx($"resources/{config.Font}", GUI_FONT_SIZE, 250);
+        string baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        Font = Raylib.LoadFontEx(Path.Combine(baseDirectory, $"resources/{config.Font}"), GUI_FONT_SIZE, 250);
         RefreshTextWidth = Raylib.MeasureTextEx(Font, REFRESH, GUI_FONT_SIZE, FONT_SPACING);
         // get the longest string from Queries
         var longest = Queries.OrderByDescending(q => q.Length).First();
@@ -61,6 +63,6 @@ public class WindowToShow()
     public string Title { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
     public Vector2 PanOffset { get; set; }
-    public Vector2 Scroll { get; set; } = new(0,0);
+    public Vector2 Scroll { get; set; } = new(0, 0);
     public Rectangle WindowRect { get; set; }
 }

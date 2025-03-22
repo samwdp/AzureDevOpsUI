@@ -8,25 +8,6 @@ public static class Renderer
     {
         if (uiState.OpenWindow is not null && uiState.OpenWindow.IsOpen)
         {
-            // if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
-            // {
-            //     Vector2 mousePos = Raylib.GetMousePosition();
-            //     if (Raylib.CheckCollisionPointRec(mousePos, uiState.OpenWindow.WindowRect) && !uiState.OpenWindow.Dragging)
-            //     {
-            //         uiState.OpenWindow.Dragging = true;
-            //         uiState.OpenWindow.PanOffset = new(mousePos.X - uiState.OpenWindow.WindowRect.x, mousePos.Y - uiState.OpenWindow.WindowRect.y);
-            //     }
-            //     if (uiState.OpenWindow.Dragging)
-            //     {
-            //         var tempRect = uiState.OpenWindow.WindowRect;
-            //         uiState.OpenWindow.WindowRect = new(mousePos.X - uiState.OpenWindow.PanOffset.X, mousePos.Y - uiState.OpenWindow.PanOffset.Y, tempRect.width, tempRect.height);
-            //     }
-            // }
-            // else
-            // {
-            //     uiState.OpenWindow.Dragging = false;
-            // }
-
             var result = RayGui.GuiWindowBox(uiState.OpenWindow.WindowRect, uiState.OpenWindow.Title);
 
             // Content area within the window

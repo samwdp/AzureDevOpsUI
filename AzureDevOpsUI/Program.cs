@@ -1,12 +1,14 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
 using AzureDevOpsUi;
 using ZeroElectric.Vinculum;
 
 Raylib.SetWindowState(ConfigFlags.FLAG_WINDOW_RESIZABLE
         | ConfigFlags.FLAG_VSYNC_HINT);
 
-Raylib.InitWindow(800, 450, "Dev Ops UI");
-Config c = JsonSerializer.Deserialize<Config>(File.ReadAllText("./config.json"), AppJsonSerializerContext.Default.Config);
+Raylib.InitWindow(1280, 720, "Dev Ops UI");
+string baseDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+Config c = JsonSerializer.Deserialize<Config>(File.ReadAllText(Path.Combine(baseDirectory, "config.json")), AppJsonSerializerContext.Default.Config);
 UIState uiState = new(c);
 DataGetter data = new(c);
 
@@ -41,7 +43,7 @@ while (!Raylib.WindowShouldClose())
     {
         uiState.GUI_FONT_SIZE += (int)(Raylib.GetMouseWheelMove() * 8.0);
         if (uiState.GUI_FONT_SIZE < 10) uiState.GUI_FONT_SIZE = 10;
-        uiState.Font = Raylib.LoadFontEx("C:\\Windows\\Fonts\\LilexNerdFont-Regular.ttf", uiState.GUI_FONT_SIZE, 250);
+        uiState.Font = Raylib.LoadFontEx(Path.Combine(baseDirectory, $"resources/{c.Font}"), uiState.GUI_FONT_SIZE, 250);
         RayGui.GuiSetFont(uiState.Font);
         RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_SIZE, uiState.GUI_FONT_SIZE);
         RayGui.GuiSetStyle((int)GuiControl.LISTVIEW, (int)GuiListViewProperty.LIST_ITEMS_HEIGHT, (int)uiState.RefreshTextWidth.Y);
