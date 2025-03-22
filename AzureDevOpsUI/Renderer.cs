@@ -25,9 +25,10 @@ public static class Renderer
 
             Rectangle view = contentArea;
             Vector2 scroll = uiState.OpenWindow.Scroll;
-            Rectangle content_rec = new(0, 0, Math.Max(contentArea.width - 4, textSize.X), Math.Max(contentArea.height, textSize.Y));
+            Rectangle content_rec = new(0, 0, Math.Max(contentArea.width - 4, (textSize.X / 2)), Math.Max(contentArea.height, textSize.Y));
 
             // Use GuiScrollPanel to create scrollable content
+            Console.WriteLine($"Content Area: {content_rec.width}");
             RayGui.GuiScrollPanel(contentArea, null, content_rec, ref scroll, ref view);
             uiState.OpenWindow.Scroll = scroll;
 
