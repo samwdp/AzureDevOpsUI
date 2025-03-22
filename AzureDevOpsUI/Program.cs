@@ -60,7 +60,7 @@ while (!Raylib.WindowShouldClose())
 
     Raylib.BeginDrawing();
     Raylib.ClearBackground(Raylib.DARKGRAY);
-    if (RayGui.GuiButton(new(10, 10, uiState.RefreshTextWidth.X, uiState.RefreshTextWidth.Y), uiState.REFRESH) == 1)
+    if (RayGui.GuiButton(new(10, 10, uiState.RefreshTextWidth.X + uiState.PADDING, uiState.RefreshTextWidth.Y + uiState.PADDING), uiState.REFRESH) == 1)
     {
         data.ShowWorkItems(uiState).Wait();
     }
@@ -73,7 +73,7 @@ while (!Raylib.WindowShouldClose())
             uiState.Queries.OrderByDescending(q => q.Length).First(),
             uiState.GUI_FONT_SIZE,
             uiState.FONT_SPACING);
-    if (RayGui.GuiDropdownBox(new(200, 10, uiState.DropdownWidth.X, uiState.DropdownWidth.Y), q, ref selectedQueryId, editMode) == 1)
+    if (RayGui.GuiDropdownBox(new(200, 10, uiState.DropdownWidth.X + uiState.PADDING, uiState.DropdownWidth.Y + uiState.PADDING), q, ref selectedQueryId, editMode) == 1)
     {
         editMode = !editMode;
         uiState.SelectedQuery = uiState.Queries[selectedQueryId];

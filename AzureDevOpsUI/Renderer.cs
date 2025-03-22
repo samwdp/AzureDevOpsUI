@@ -19,13 +19,15 @@ public static class Renderer
 
             // Calculate content text size to determine if scrolling is needed
             string content = uiState.OpenWindow.Content ?? string.Empty;
-            Vector2 textSize = Raylib.MeasureTextEx(uiState.Font, content, uiState.GUI_FONT_SIZE, uiState.FONT_SPACING);
+            string longestLine = uiState.OpenWindow.Content == string.Empty ? string.Empty :
+                uiState.OpenWindow.Content.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.None).OrderByDescending(x => x.Length).First().Trim();
+            Vector2 textSize = Raylib.MeasureTextEx(uiState.Font, longestLine, uiState.GUI_FONT_SIZE, uiState.FONT_SPACING);
 
             // Create view area and content area for scrolling
 
             Rectangle view = contentArea;
             Vector2 scroll = uiState.OpenWindow.Scroll;
-            Rectangle content_rec = new(0, 0, Math.Max(contentArea.width - 4, (textSize.X / 2)), Math.Max(contentArea.height, textSize.Y));
+            Rectangle content_rec = new(0, 0, Math.Max(contentArea.width - 4, textSize.X), Math.Max(contentArea.height, textSize.Y));
 
             // Use GuiScrollPanel to create scrollable content
             RayGui.GuiScrollPanel(contentArea, null, content_rec, ref scroll, ref view);

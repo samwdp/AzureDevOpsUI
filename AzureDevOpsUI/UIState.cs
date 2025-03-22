@@ -14,7 +14,7 @@ public class UIState
         {"Ready For Test", new()},
     };
     public MinimalWorkItem? selectedWorkItem { get; set; } = null;
-    public int FONT_SPACING = 10;
+    public int FONT_SPACING = 1;
     public int GUI_FONT_SIZE = 18;
     public int PADDING = 5;
     public string REFRESH = "Refresh";
