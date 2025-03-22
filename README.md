@@ -15,6 +15,7 @@ If you want to use your own font, please put the font in the `resources/` direct
 ```json
 {
   "Font": "Font.ttf",
+  "FontSize": 18,
   "CollectionUri": "https://dev.azure.com/[your org]",
   "PatToken": "your pat token",
   "DefaultProject": "[Project with the query you want to run]",
