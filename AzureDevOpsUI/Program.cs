@@ -13,6 +13,7 @@ UIState uiState = new(c);
 DataGetter data = new(c);
 
 RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_SIZE, uiState.GUI_FONT_SIZE);
+RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_LINE_SPACING, uiState.GUI_FONT_SIZE);
 RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.BACKGROUND_COLOR, Raylib.ColorToInt(Raylib.GRAY));
 RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.TEXT_COLOR_NORMAL, Raylib.ColorToInt(Raylib.LIGHTGRAY));
 RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_ALIGNMENT_VERTICAL, (int)GuiTextAlignmentVertical.TEXT_ALIGN_TOP);
@@ -23,7 +24,7 @@ RayGui.GuiSetStyle((int)GuiControl.TEXTBOX, (int)GuiTextBoxProperty.TEXT_READONL
 RayGui.GuiSetStyle((int)GuiControl.BUTTON, (int)GuiControlProperty.BASE_COLOR_NORMAL, Raylib.ColorToInt(Raylib.GRAY));
 RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.BASE_COLOR_NORMAL, Raylib.ColorToInt(Raylib.DARKGRAY));
 RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_ALIGNMENT, (int)GuiTextAlignment.TEXT_ALIGN_CENTER);
-RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_PADDING, 5);
+RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_PADDING, 1);
 RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiDefaultProperty.TEXT_ALIGNMENT_VERTICAL, (int)GuiTextAlignmentVertical.TEXT_ALIGN_MIDDLE);
 RayGui.GuiSetStyle((int)GuiControl.DROPDOWNBOX, (int)GuiControlProperty.TEXT_COLOR_NORMAL, Raylib.ColorToInt(Raylib.LIGHTGRAY));
 RayGui.GuiSetStyle((int)GuiControl.DROPDOWNBOX, (int)GuiControlProperty.BASE_COLOR_NORMAL, Raylib.ColorToInt(Raylib.GRAY));
@@ -42,11 +43,23 @@ while (!Raylib.WindowShouldClose())
     if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL))
     {
         uiState.GUI_FONT_SIZE += (int)(Raylib.GetMouseWheelMove() * 8.0);
-        if (uiState.GUI_FONT_SIZE < 10) uiState.GUI_FONT_SIZE = 10;
+        RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_SIZE, uiState.GUI_FONT_SIZE);
+        RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_LINE_SPACING, uiState.GUI_FONT_SIZE);
+        RayGui.GuiSetStyle((int)GuiControl.LISTVIEW, (int)GuiListViewProperty.LIST_ITEMS_HEIGHT, (int)uiState.RefreshTextWidth.Y);
+        RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_PADDING, 1);
+        if (uiState.GUI_FONT_SIZE < 10)
+        {
+            uiState.GUI_FONT_SIZE = 10;
+            RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_PADDING, 1);
+        }
+        ;
+        if (uiState.GUI_FONT_SIZE > 24)
+        {
+            uiState.GUI_FONT_SIZE = 24;
+            RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_PADDING, 0);
+        }
         uiState.Font = Raylib.LoadFontEx(Path.Combine(baseDirectory, $"resources/{c.Font}"), uiState.GUI_FONT_SIZE, 250);
         RayGui.GuiSetFont(uiState.Font);
-        RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_SIZE, uiState.GUI_FONT_SIZE);
-        RayGui.GuiSetStyle((int)GuiControl.LISTVIEW, (int)GuiListViewProperty.LIST_ITEMS_HEIGHT, (int)uiState.RefreshTextWidth.Y);
         uiState.RefreshTextWidth = Raylib.MeasureTextEx(uiState.Font, uiState.REFRESH, uiState.GUI_FONT_SIZE, uiState.FONT_SPACING);
     }
 

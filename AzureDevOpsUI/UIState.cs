@@ -7,6 +7,7 @@ using Rectangle = ZeroElectric.Vinculum.Rectangle;
 namespace AzureDevOpsUi;
 public class UIState
 {
+
     public Dictionary<string, WorkItemList> stateToTitles { get; set; } = new(){
         {"New", new()},
         {"Active", new()},
