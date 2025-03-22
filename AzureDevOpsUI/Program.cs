@@ -12,7 +12,7 @@ Config c = JsonSerializer.Deserialize(File.ReadAllText(Path.Combine(baseDirector
 UIState uiState = new(c);
 DataGetter data = new(c);
 
-RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_SIZE, uiState.GUI_FONT_SIZE);
+RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_SIZE, Math.Min(uiState.GUI_FONT_SIZE, 24));
 RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_LINE_SPACING, uiState.GUI_FONT_SIZE);
 RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.BACKGROUND_COLOR, Raylib.ColorToInt(Raylib.GRAY));
 RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiControlProperty.TEXT_COLOR_NORMAL, Raylib.ColorToInt(Raylib.LIGHTGRAY));
@@ -47,17 +47,12 @@ while (!Raylib.WindowShouldClose())
         RayGui.GuiSetStyle((int)GuiControl.DEFAULT, (int)GuiDefaultProperty.TEXT_LINE_SPACING, uiState.GUI_FONT_SIZE);
         RayGui.GuiSetStyle((int)GuiControl.LISTVIEW, (int)GuiListViewProperty.LIST_ITEMS_HEIGHT, (int)uiState.RefreshTextWidth.Y);
         RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_PADDING, 1);
-        if (uiState.GUI_FONT_SIZE < 10)
-        {
-            uiState.GUI_FONT_SIZE = 10;
-            RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_PADDING, 1);
-        }
-        ;
-        if (uiState.GUI_FONT_SIZE > 24)
-        {
-            uiState.GUI_FONT_SIZE = 24;
-            RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_PADDING, 0);
-        }
+        // Clamp font size between 10 and 24
+        uiState.GUI_FONT_SIZE = Math.Clamp(uiState.GUI_FONT_SIZE, 10, 24);
+        
+        // Set padding based on font size
+        RayGui.GuiSetStyle((int)GuiControl.STATUSBAR, (int)GuiControlProperty.TEXT_PADDING, 
+            uiState.GUI_FONT_SIZE == 24 ? 0 : 1);
         uiState.Font = Raylib.LoadFontEx(Path.Combine(baseDirectory, $"resources/{c.Font}"), uiState.GUI_FONT_SIZE, 250);
         RayGui.GuiSetFont(uiState.Font);
         uiState.RefreshTextWidth = Raylib.MeasureTextEx(uiState.Font, uiState.REFRESH, uiState.GUI_FONT_SIZE, uiState.FONT_SPACING);
